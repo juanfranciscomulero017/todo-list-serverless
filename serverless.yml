@@ -47,12 +47,21 @@ functions:
           path: todos/{id}
           method: get
           cors: true
+
   translate:
     handler: todos/translate.translate
     events:
       - http:
           path: todos/translate.py
           method: options
+          cors: true
+
+  test:
+    handler: todos/test.test
+    events:
+      - http:
+          path: todos/{id}
+          method: get
           cors: true
 
   update:

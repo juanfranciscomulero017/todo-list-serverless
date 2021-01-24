@@ -2,7 +2,7 @@ org: juanfranciscomulero
 app: todo-list-serverless
 service: serverless-rest-api-with-dynamodb
 
-frameworkVersion: ">=1.1.0"
+frameworkVersion: "2.20.1"
 
 provider:
   name: aws

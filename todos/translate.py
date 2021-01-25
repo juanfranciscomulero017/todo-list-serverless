@@ -1,30 +1,33 @@
 import boto3
-import locale
+import json
+import os
 
-language_system = locale.getdefaultlocale()[0]
-
-cadena1 = 'Introduce el idioma al que quieres traducir la frase: '
+from todos import decimalencoder
 
 translate = boto3.client('translate')
 
-cadena1_traducida = translate.translate_text(Text=cadena1,
+
+
+
+dynamodb = boto3.resource('dynamodb')
+
+
+def list(event, context):
+    table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
+
+    # fetch all todos from the database
+    result = table.scan()
+
+    # create a response
+    response = {
+        "statusCode": 200,
+        "body": json.dumps(result['Items'], cls=decimalencoder.DecimalEncoder)
+    }
+    
+    cadena1_traducida = translate.translate_text(Text=response,
                                           SourceLanguageCode="auto",
-                                                                            TargetLanguageCode=language_system[0:2])
+                                                                            TargetLanguageCode="en")
 
-lenguaje = input(cadena1_traducida["TranslatedText"])
+    lenguaje = input(cadena1_traducida["TranslatedText"])
 
-cadena2 = 'Introduce una frase en un idioma: '
-
-cadena2_traducida = translate.translate_text(Text=cadena2,
-                                          SourceLanguageCode="auto",
-                                                                            TargetLanguageCode=language_system[0:2])
-
-cadena = input(cadena2_traducida["TranslatedText"])
-
-result = translate.translate_text(Text=cadena,
-                                          SourceLanguageCode="auto",
-                                                                            TargetLanguageCode=lenguaje)
-
-print(f'TranslatedText: {result["TranslatedText"]}')
-print(f'SourceLanguageCode: {result["SourceLanguageCode"]}')
-print(f'TargetLanguageCode: {result["TargetLanguageCode"]}')
+    return lenguaje

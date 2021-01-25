@@ -18,10 +18,19 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-        - translate:TranslateText
-        - comprehend:DetectDominantLanguage
-        - lambda:InvokeFunction
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+    - Effect: allow
+      Action:
+        - comprehend:BatchDetectDominantLanguage
+        - comprehend:DetectDominantLanguage
+      Resource: "*"
+    - Effect: allow
+      Action:
+        - translate:TranslateText
+        - cloudwatch:GetMetricsStatistics
+        - cloudwatch:ListMetrics
+        - lambda:InvokeFunction
+      Resource: "*"
 
 functions:
   create:
